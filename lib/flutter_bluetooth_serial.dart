@@ -74,13 +74,17 @@ class FlutterBluetoothSerial {
   Future<dynamic> write(String message) =>
       _channel.invokeMethod('write', {'message': message});
 
-  Future<dynamic> writeBytes(Uint8List message)  =>
-      _channel.invokeMethod('writeBytes', {'message': message});
+  Future<dynamic> printJob(String message) async =>
+      await _channel.invokeMethod('printJob', {'message': message});
+
+  Future<dynamic> testPrint(String message) =>
+      _channel.invokeMethod('testPrint', {'message': message});
+
+  Future<dynamic> writeBytes(Uint8List bytes) =>
+      _channel.invokeMethod('writeBytes', {'message': bytes});
 }
 
-///
-///
-///
+
 class BluetoothDevice {
   final String name;
   final String address;

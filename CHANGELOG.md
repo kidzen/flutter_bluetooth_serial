@@ -1,3 +1,7 @@
+## [0.0.5] - 2018-12-26
+
+* Added writeBytes methodCall
+
 ## [0.0.4] - 2018-12-20
 
 * Unsupported value error correction (thanks @rafaelterada)
