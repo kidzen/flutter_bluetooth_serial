@@ -74,8 +74,8 @@ class FlutterBluetoothSerial {
   Future<dynamic> write(String message) =>
       _channel.invokeMethod('write', {'message': message});
 
-  Future<dynamic> printJob(String message) async =>
-      await _channel.invokeMethod('printJob', {'message': message});
+  Future<dynamic> printJob(Notice notice) async =>
+      await _channel.invokeMethod('printJob', notice.toMap());
 
   Future<dynamic> testPrint(String message) =>
       _channel.invokeMethod('testPrint', {'message': message});
@@ -104,6 +104,40 @@ class BluetoothDevice {
         'type': this.type,
         'status': this.status,
         'connected': this.connected,
+      };
+}
+
+class Notice {
+  final String noticeNo;
+  final String roadtax;
+  final String vehicleMakeModel;
+  final String color;
+  final String locationDetail;
+  final String location;
+  final String vehicleType;
+  final String date;
+  final String time;
+  final String actStd;
+  final String actReg;
+  final String offence;
+  final String officer;
+  final String expiredDate;
+
+  Map<String, dynamic> toMap() => {
+        'notice_no': this.noticeNo,
+        'roadtax': this.roadtax,
+        'vehicle_make_model': this.vehicleMakeModel,
+        'color': this.color,
+        'location_detail': this.locationDetail,
+        'location': this.location,
+        'vehicle_type': this.vehicleType,
+        'date': this.date,
+        'time': this.time,
+        'act_std': this.actStd,
+        'act_reg': this.actReg,
+        'offence': this.offence,
+        'officer': this.officer,
+        'expired_date': this.expiredDate,
       };
 }
 
