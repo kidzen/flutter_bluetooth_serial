@@ -89,17 +89,21 @@ class BluetoothDevice {
   final String name;
   final String address;
   final int type;
+  final String status;
   bool connected = false;
 
   BluetoothDevice.fromMap(Map map)
       : name = map['name'],
         address = map['address'],
-        type = map['type'];
+        type = map['type'],
+        status = map['status'];
 
   Map<String, dynamic> toMap() => {
         'name': this.name,
         'address': this.address,
         'type': this.type,
+        'status': this.status,
         'connected': this.connected,
       };
 }
+

@@ -189,6 +189,7 @@ RequestPermissionsResultListener {
         if (arguments.containsKey("message")) {
             String message = (String) arguments.get("message");
             printJob(result, message);
+            // testPrint(result, message);
                     // printJob(result, message);
                     // printJob(result, message);
                     // testPrint(result, message);
@@ -238,6 +239,7 @@ RequestPermissionsResultListener {
             ret.put("address", device.getAddress());
             ret.put("name", device.getName());
             ret.put("type", device.getType());
+            ret.put("status", "bonded");
             list.add(ret);
         }
 
@@ -364,7 +366,7 @@ RequestPermissionsResultListener {
 
 
     private static void InitPrinterTraffic() {
-        b = Bitmap.createBitmap(832, 1900, Bitmap.Config.ARGB_8888);
+        b = Bitmap.createBitmap(832, 1700, Bitmap.Config.ARGB_8888);
         c = new Canvas(b);
 
         c.drawColor(Color.WHITE);
@@ -376,25 +378,28 @@ RequestPermissionsResultListener {
         PosY = 0;
     }
 
+    private static void feedToBlack() {
+        printData = new ArrayList<byte[]>();
+        printData.add(PrinterCommands.PRINT_TO_BLACK_MARK);
+    }
+
 
     private void printJob(Result result, String message) {
-        String officerDetails = "AHMAD BIN ADBUL JALIL";
+        String officerDetails = "PK71 - L/KPL SHAMSUL IQBAL BIN SAHAT @ ISMAIL";
         InitPrinterTraffic();
         // PrintText(PosX, IncY, FontType, FontSize, FontBold, strVariable, nLimit, RightJustified);
 
-        // PrintText(1.2d, 0.15d, "Arial", 12, true, message, -1);
-        // PrintText(1.2d, 0.15d, "Arial", 12, true, "PERBADANAN PUTRAJAYAA", -1);
-        /*PrintText(0.1d, 1.4d, "Arial", 9, false, "No. :", -1);
-        PrintText(0.4d, 0.0d, "Arial", 9, true, "AC745679187", -1);
-        // PrintText(0.0d, 0.1d, "Arial", 8, false, "", -1);
-
         //        // PrintBarCode(1.5d, 0.3d, Notice.NoticeSerialNo);
+        PrintText(0.1d, 1.3d, "Arial", 9, false, "No. :", -1);
+        PrintText(0.4d, 0.0d, "Arial", 9, true, Notice.NoticeNo, -1);
         // PrintText(0.95d, 0.2d, "Arial", 10, true, "NOTIS KESALAHAN SERTA TAWARAN KOMPAUN", -1);
-        PrintText(3.1d, 0.0d, "Arial", 9, false, "NO. KENDERAAN", -1);
-        PrintText(4.0d, 0.0d, "Arial", 9, false, "NO. CUKAI JALAN", -1);
-        PrintText(0.95d, 0.3d, "Arial", 9, true, " : " + "Notice.VehicleNo", 20);
-        PrintText(2.95d, 0.0d, "Arial", 9, true, " : " + "Notice.RoadTaxNo", 15);
-        PrintText(0.1d, 0.15d, "Arial", 9, false, "JENAMA / MODEL", -1);
+        // PrintText(2.5d, 0.0d, "Arial", 9, false, "NO. KENDERAAN", -1);
+        // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleNo, -1);
+        PrintText(2.1d, 0.0d, "Arial", 9, false, "TARIKH", -1);
+        PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleNo, -1);
+        // PrintText(4.0d, 0.0d, "Arial", 9, false, "NO. CUKAI JALAN", -1);
+        // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.RoadTaxNo, -1);
+        PrintText(0.1d, 0.25d, "Arial", 9, false, "JENAMA / MODEL", -1);
         String makeModel = "";
         if (Notice.VehicleMake.length() != 0) {
             makeModel = makeModel + Notice.VehicleMake;
@@ -425,61 +430,43 @@ RequestPermissionsResultListener {
         PrintText(0.95d, 0.15d, "Arial", 9, true, " : " + Notice.OffenceLocation, -1);
         PrintText(0.95d, 0.15d, "Arial", 9, true, " : W.P. PUTRAJAYA", -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "TARIKH", -1);
-        PrintText(2.1d, 0.0d, "Arial", 9, false, "WAKTU", -1);
+        PrintText(2.5d, 0.0d, "Arial", 9, false, "WAKTU", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + Notice.OffenceDate, -1);
-        PrintText(2.95d, 0.0d, "Arial", 9, true, " : " + Notice.OffenceTime, -1);
+        PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.OffenceTime, -1);
         // PrintTextFlow("KEPADA PEMUNYA / PEMANDU KENDERAAN TERSEBUT DI ATAS, TUAN / PUAN DI DAPATI TELAH MELAKUKAN KESALAHAN SEPERTI BERIKUT :", 0.1d, 0.3d);
-        PrintText(0.1d, 0.3d, "Arial", 9, true, "PERUNTUKAN UNDANG-UNDANG:", -1);
+        PrintText(0.1d, 1.0d, "Arial", 9, true, "PERUNTUKAN UNDANG-UNDANG:", -1);
         PrintTextFlow(Notice.OffenceAct, 0.3d, 0.15d);
-        PrintText(0.1d, 0.3d, "Arial", 9, true, "SEKSYEN / KAEDAH / PERENGGAN :", -1);
+        PrintText(0.1d, 0.15d, "Arial", 9, true, "SEKSYEN / KAEDAH / PERENGGAN :", -1);
         PrintTextFlow(Notice.OffenceSection, 0.3d, 0.15d);
         PrintText(0.1d, 0.15d, "Arial", 9, true, "KESALAHAN :", -1);
         PrintTextFlow(Notice.Offence, 0.3d, 0.15d);
-        PrintText(0.1d, 0.6d, "Arial", 9, false, "DIKELUARKAN OLEH :", -1);
+        PrintText(0.1d, 0.3d, "Arial", 9, false, "DIKELUARKAN OLEH :", -1);
         PrintText(1.1d, 0.0d, "Arial", 9, true, officerDetails, -1);
         PrintText(1.1d, 0.1d, "Arial", 9, false, "WARDEN LALULINTAS", -1);
         PrintText(3.0d, 0.0d, "Arial", 9, false, "TARIKH :", -1);
         PrintText(3.5d, 0.0d, "Arial", 9, true, Notice.OffenceDateTime, -1);
-        // PrintText(0.1d, 0.1d, "Arial", 9, false, "_______________________________________________________________________________________________________________________________", -1);
-        // PrintText(0.1d, 0.2d, "Arial", 9, true, "TAWARAN KOMPAUN", -1);
-        // PrintTextFlow("SAYA BERSEDIA MENGKOMPAUN KESALAHAN SEPERTI YANG DITETAPKAN DALAM MASA 14 HARI (TARIKH TAMAT : " + Notice.CompoundDate + ") DARI TARIKH NOTIS DICETAK. KEGAGALAN MENJELASKAN BAYARAN KOMPAUN AKAN MENYEBABKAN TINDAKAN MAHKAMAH AKAN DIAMBIL.", 0.1d, 0.2d);
-        //         // PrintImage("signature.bmp", 0.2d, 0.4d, 0.0d, 0.0d, false);
-        // PrintText(2.7d, 0.1d, "Arial", 9, true, "KADAR BAYARAN", -1);
-        // if (Notice.CompoundAmountDesc1 == null || Notice.CompoundAmountDesc1.length() == 0) {
-            // PrintText(2.9d, 0.1d, "Arial", 9, true, "", -1);
-        // } else {
-        PrintText(2.5d, 2.1d, "Arial", 9, true, Notice.CompoundAmountDesc1, -1);
-        PrintText(3.2d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount1, -1);
-        PrintText(2.5d, 0.1d, "Arial", 9, true, Notice.CompoundAmountDesc2, -1);
-        PrintText(3.2d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount2, -1);
-        PrintText(0.0d, -0.1d, "Arial", 9, true, "", -1);
-        PrintText(2.5d, 0.2d, "Arial", 9, true, Notice.CompoundAmountDesc3, -1);
-        PrintText(3.2d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount3, -1);
-        PrintText(0.0d, -0.2d, "Arial", 9, true, "", -1);
-        PrintText(2.5d, 0.3d, "Arial", 9, true, Notice.CompoundAmountDesc4, -1);
-        PrintText(3.2d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount4, -1);
-        PrintText(0.0d, -0.3d, "Arial", 9, true, "", -1);
-        // }
-        // PrintText(0.2d, 0.2d, "Arial", 9, false, "...............................................................", -1);
-        PrintText(0.3d, 0.1d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
-        // PrintText(0.2d, 0.1d, "Arial", 9, false, "JABATAN UNDANG-UNDANG", -1);
-        // PrintText(0.2d, 0.1d, "Arial", 9, false, "b.p. PRESIDEN PERBADANAN PUTRAJAYA", -1);
-        // PrintText(0.1d, 0.3d, "Arial", 9, false, "-------------------------------------------------------------------------------------------------------------------------------", -1);
+
+        PrintText(1.92d, 2.1d, "Arial", 9, true, "RM " + Notice.CompoundAmount1, -1);
+        PrintText(2.5d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount2, -1);
+        PrintText(3.18d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount3, -1);
         //         // PrintImage("logo.bmp", 0.15d, 0.05d, 0.0d, 0.0d, false);
         // PrintText(0.7d, 0.1d, "Arial", 9, true, "PERBADANAN PUTRAJAYA", -1);
-        PrintText(0.7d, 0.2d, "Arial", 8, false, "NO. KEND.", -1);
-        PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.VehicleNo, -1);
-        PrintText(0.7d, 0.1d, "Arial", 8, false, "PERUNTUKAN", -1);
-        PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceAct, 50);
-        PrintText(0.7d, 0.1d, "Arial", 8, false, "SEKSYEN/KAEDAH", -1);
-        PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceSection, -1);
-        PrintText(0.7d, 0.1d, "Arial", 8, false, "TARIKH", -1);
-        PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceDateTime, -1);
+        // PrintText(0.7d, 0.2d, "Arial", 8, false, "NO. KEND.", -1);
+        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.VehicleNo, -1);
+        // PrintText(0.7d, 0.1d, "Arial", 8, false, "PERUNTUKAN", -1);
+        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceAct, 50);
+        // PrintText(0.7d, 0.1d, "Arial", 8, false, "SEKSYEN/KAEDAH", -1);
+        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceSection, -1);
+        // PrintText(0.7d, 0.1d, "Arial", 8, false, "TARIKH", -1);
+        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceDateTime, -1);
                 // PrintRect(0.1d, 0.2d, 4.0d, 0.4d);
-        PrintText(2.7d, 0.4d, "Arial", 8, true, "KERATAN UNTUK CATATAN PEMBAYARAN", -1, true);
-        PrintText(2.2d, 0.1d, "Arial", 8, false, "TERIMA KASIH", -1, true);
-        PrintText(3.1d, 0.1d, "Arial", 8, false, "No. :", -1, true);
-        PrintText(4.0d, 0.0d, "Arial", 9, true, Notice.NoticeSerialNo, -1, true);*/
+        // PrintText(2.7d, 0.4d, "Arial", 8, true, "KERATAN UNTUK CATATAN PEMBAYARAN", -1, true);
+        // PrintText(2.2d, 0.1d, "Arial", 8, false, "TERIMA KASIH", -1, true);
+        PrintText(3.2d, 1.1d, "Arial", 9, false, "No. :", -1, true);
+        PrintText(4.1d, 0.0d, "Arial", 9, true, Notice.NoticeNo, -1, true);
+        PrintText(0.1d, 0.1d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
+
+        // printData.add(PrinterCommands.PRINT_TO_BLACK_MARK);
         c.save();
 
 
@@ -513,6 +500,7 @@ RequestPermissionsResultListener {
         printData = new ArrayList<byte[]>();
         printData.add(PrinterCommands.INITIALIZE_PRINTER);
         PosY = 0.0;
+        printData.add(PrinterCommands.PRINT_TO_BLACK_MARK);
         PrintText(0.2, 0.2, "Arial", 20, true, "message", -1);
 
         c.save();
@@ -537,6 +525,7 @@ RequestPermissionsResultListener {
         bmp.getPixels(pixels, 0, width, 0, 0, width, height);
         byte[] bitArray = ConvertBitArray(pixels, width, height);
 
+
         THREAD.write(PrinterCommands.SET_LINE_SPACING_0);
         for (int r = 0; r < height / 100; r++) {
             byte[] send = new byte[(pL + 5)];
@@ -549,111 +538,110 @@ RequestPermissionsResultListener {
             System.arraycopy(bitArray, r * pL, send, 5, pL);
             // print(send);
             // THREAD.write(String.valueOf(r).getBytes());
-            THREAD.write(String.valueOf(height).getBytes());
+            // THREAD.write(String.valueOf(r).getBytes());
             // THREAD.write(PrinterCommands.PRINT_FEED_LINE);
             // THREAD.write(String.valueOf(height).getBytes());
             // THREAD.write(PrinterCommands.PRINT_FEED_LINE);
-            if(r != 18) {
-                THREAD.write(send);
-                THREAD.write(PrinterCommands.PRINT_FEED_LINE);                
-            }
+            THREAD.write(send);
+            THREAD.write(PrinterCommands.PRINT_FEED_LINE);                
         }
+        THREAD.write(PrinterCommands.PRINT_TO_BLACK_MARK);
 
     }
 
     private static void PrintText(double PosX, double IncY, String FontType, int FontSize, boolean FontBold, String strVariable, int nLimit) {
-     PrintText(PosX, IncY, FontType, FontSize, FontBold, strVariable, nLimit, false);
- }
-
- private static void PrintText(double PosX, double IncY, String FontType, int FontSize, boolean FontBold, String strVariable, int nLimit, boolean RightJustified) {
-    Paint p = new Paint();
-    p.setColor(Color.BLACK);
-    p.setTextSize((float) (((double) FontSize) * 2.25d));
-    if (FontBold) {
-        p.setTypeface(Typeface.DEFAULT_BOLD);
+        PrintText(PosX, IncY, FontType, FontSize, FontBold, strVariable, nLimit, false);
     }
-    if (RightJustified) {
-        p.setTextAlign(Align.RIGHT);
-    }
-    if (nLimit == 0) {
-        p.setTextAlign(Align.CENTER);
-    }
-    PosY += IncY;
-    float xPos = (float) PosX * 200;
-    float yPos = (float) PosY * 200;
 
-    c.drawText(strVariable, xPos, yPos, p);
-    c.save();
-}
-
-private static void PrintTextFlow(String strVariable, double PosX, double IncY) {
-    Paint p = new Paint();
-    p.setColor(Color.BLACK);
-    p.setTextSize(20.25f);
-    p.setTypeface(Typeface.DEFAULT_BOLD);
-    PosY += IncY;
-    float xPos = ((float) PosX) * 200.0f;
-    float yPos = ((float) PosY) * 200.0f;
-    String strTemp = "";
-    while (strVariable.length() != 0) {
-        if (p.measureText(strVariable) < 760.0f) {
-            c.drawText(strVariable, xPos, yPos, p);
-            c.save();
-            yPos += 20.0f;
-            strVariable = strTemp.trim();
-            strTemp = "";
+    private static void PrintText(double PosX, double IncY, String FontType, int FontSize, boolean FontBold, String strVariable, int nLimit, boolean RightJustified) {
+        Paint p = new Paint();
+        p.setColor(Color.BLACK);
+        p.setTextSize((float) (((double) FontSize) * 2.25d));
+        if (FontBold) {
+            p.setTypeface(Typeface.DEFAULT_BOLD);
         }
-        if (strVariable.length() != 0) {
+        if (RightJustified) {
+            p.setTextAlign(Align.RIGHT);
+        }
+        if (nLimit == 0) {
+            p.setTextAlign(Align.CENTER);
+        }
+        PosY += IncY;
+        float xPos = (float) PosX * 200;
+        float yPos = (float) PosY * 200;
+
+        c.drawText(strVariable, xPos, yPos, p);
+        c.save();
+    }
+
+    private static void PrintTextFlow(String strVariable, double PosX, double IncY) {
+        Paint p = new Paint();
+        p.setColor(Color.BLACK);
+        p.setTextSize(20.25f);
+        p.setTypeface(Typeface.DEFAULT_BOLD);
+        PosY += IncY;
+        float xPos = ((float) PosX) * 200.0f;
+        float yPos = ((float) PosY) * 200.0f;
+        String strTemp = "";
+        while (strVariable.length() != 0) {
             if (p.measureText(strVariable) < 760.0f) {
                 c.drawText(strVariable, xPos, yPos, p);
                 c.save();
                 yPos += 20.0f;
-                strVariable = "";
+                strVariable = strTemp.trim();
                 strTemp = "";
-            } else {
-                strTemp = strVariable.substring(strVariable.lastIndexOf(32)) + strTemp;
-                strVariable = strVariable.substring(0, strVariable.lastIndexOf(32));
             }
-        }
-    }
-}
-
-private static void PrintRect(double left, double top, double right, double bottom) {
-    Paint p = new Paint();
-    p.setColor(Color.BLACK);
-    PosY += top;
-    float lPos = ((float) left) * 200.0f;
-    float rPos = ((float) right) * 200.0f;
-    float tPos = ((float) PosY) * 200.0f;
-    PosY += bottom;
-    float bPos = ((float) PosY) * 200.0f;
-    c.drawLine(lPos, tPos, rPos, tPos, p);
-    c.drawLine(lPos, tPos, lPos, bPos, p);
-    c.drawLine(lPos, bPos, rPos, bPos, p);
-    c.drawLine(rPos, tPos, rPos, bPos, p);
-    c.save();
-}
-
-private static byte[] ConvertBitArray(int[] src, int width, int height) {
-    int w = (width / 8) + (width % 8 > 0 ? 1 : 0);
-    byte[] ret = new byte[(w * height)];
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < w; x++) {
-            for (int b = 0; b < 8; b++) {
-                int pos = ((y * width) + (x * 8)) + b;
-                int monoPos = (y * w) + x;
-                if (((x * 8) + b) + 1 > width) {
-                    ret[monoPos] = (byte) ((ret[monoPos] << 1) + 1);
-                } else if (src[pos] == -1) {
-                    ret[monoPos] = (byte) (ret[monoPos] << 1);
+            if (strVariable.length() != 0) {
+                if (p.measureText(strVariable) < 760.0f) {
+                    c.drawText(strVariable, xPos, yPos, p);
+                    c.save();
+                    yPos += 20.0f;
+                    strVariable = "";
+                    strTemp = "";
                 } else {
-                    ret[monoPos] = (byte) ((ret[monoPos] << 1) + 1);
+                    strTemp = strVariable.substring(strVariable.lastIndexOf(32)) + strTemp;
+                    strVariable = strVariable.substring(0, strVariable.lastIndexOf(32));
                 }
             }
         }
     }
-    return ret;
-}
+
+    private static void PrintRect(double left, double top, double right, double bottom) {
+        Paint p = new Paint();
+        p.setColor(Color.BLACK);
+        PosY += top;
+        float lPos = ((float) left) * 200.0f;
+        float rPos = ((float) right) * 200.0f;
+        float tPos = ((float) PosY) * 200.0f;
+        PosY += bottom;
+        float bPos = ((float) PosY) * 200.0f;
+        c.drawLine(lPos, tPos, rPos, tPos, p);
+        c.drawLine(lPos, tPos, lPos, bPos, p);
+        c.drawLine(lPos, bPos, rPos, bPos, p);
+        c.drawLine(rPos, tPos, rPos, bPos, p);
+        c.save();
+    }
+
+    private static byte[] ConvertBitArray(int[] src, int width, int height) {
+        int w = (width / 8) + (width % 8 > 0 ? 1 : 0);
+        byte[] ret = new byte[(w * height)];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < w; x++) {
+                for (int b = 0; b < 8; b++) {
+                    int pos = ((y * width) + (x * 8)) + b;
+                    int monoPos = (y * w) + x;
+                    if (((x * 8) + b) + 1 > width) {
+                        ret[monoPos] = (byte) ((ret[monoPos] << 1) + 1);
+                    } else if (src[pos] == -1) {
+                        ret[monoPos] = (byte) (ret[monoPos] << 1);
+                    } else {
+                        ret[monoPos] = (byte) ((ret[monoPos] << 1) + 1);
+                    }
+                }
+            }
+        }
+        return ret;
+    }
 
 
     /*private static byte[] ConvertBitArray(int[] src, int width, int height) {
@@ -845,55 +833,50 @@ private static byte[] ConvertBitArray(int[] src, int width, int height) {
 
 class Notice {
     public static float CompoundAmount = 0;
-    public static float CompoundAmount1 = 0;
-    public static float CompoundAmount2 = 0;
-    public static float CompoundAmount3 = 0;
-    public static float CompoundAmount4 = 0;
-    public static String CompoundAmountDesc1 = "Test";
-    public static String CompoundAmountDesc2 = "Test";
-    public static String CompoundAmountDesc3 = "Test";
-    public static String CompoundAmountDesc4 = "Test";
-    public static String CompoundAmountDescription = "Test";
-    public static String CompoundDate = "2019-10-01";
+    public static double CompoundAmount1 = 50.00;
+    public static double CompoundAmount2 = 80.00;
+    public static double CompoundAmount3 = 100.00;
+    public static double CompoundAmount4 = 0;
+    public static String CompoundDate = "2019/01/11";
     public static String CompoundExpiryDateString = "Test";
-    public static String HandheldCode = "Test";
+    public static String HandheldCode = "AC7";
     public List<String> ImageLocation;
-    public static String ImageLocation1 = "Test";
-    public static String ImageLocation2 = "Test";
-    public static String ImageLocation3 = "Test";
+    public static String ImageLocation1 = "AC745679187Pic0.jpg";
+    public static String ImageLocation2 = "AC745679187Pic1.jpg";
+    public static String ImageLocation3 = "AC745679187Pic2.jpg";
     public static float MaxCompoundAmount = 0;
     public static String NoticeId = "1234";
-    public static String NoticeSerialNo = "AC745679187";
-    public static String Offence = "Test";
-    public static String OffenceAct = "Test";
-    public static String OffenceActCode = "Test";
+    public static String NoticeNo = "AC745679187";
+    public static String Offence = "MENYEBABKAN/MEMBENARKAN KENDERAAN DIHENTIKAN DI JALAN DALAM KEDUDUKAN /KEADAAN YG MUNGKIN MENYEBABKAN BAHAYA/HALANGAN/KESUSAHAN KEPADA PENGGUNA/LALULINTAS";
+    public static String OffenceAct = "AKTA PENGANGKUTAN JALAN 1987";
+    public static String OffenceActCode = "04";
     public static String OffenceActPos = "1234";
-    public static String OffenceCode = "Test";
+    public static String OffenceCode = "04000001001";
     public static String OffenceDateString = "Test";
-    public static String OffenceDateTime = "2019-10-01";
-    public static String OffenceDate = "2019-10-01";
+    public static String OffenceDateTime = "2019/01/11";
+    public static String OffenceDate = "2019/01/11";
     public static String OffenceTime = "14:02:10";
-    public static String OffenceLocation = "Test";
-    public static String OffenceLocationArea = "Test";
+    public static String OffenceLocation = "TAMAN WAWASAN";
+    public static String OffenceLocationArea = "PRESINT 2";
     public static String OffenceLocationAreaPos = "1234";
-    public static String OffenceLocationDetails = "Test";
+    public static String OffenceLocationDetails = "IKN";
     public static String OffenceLocationPos = "1234";
-    public static String OffenceSection = "Test";
-    public static String OffenceSectionCode = "Test";
+    public static String OffenceSection = "SEKSYEN 48";
+    public static String OffenceSectionCode = "04000001";
     public static String OffenceSectionPos = "1234";
-    public static String OfficerId = "Test";
-    public static String RoadTaxNo = "Test";
+    public static String OfficerId = "PK12";
+    public static String RoadTaxNo = "42718384";
     public static String SelectedVehicleMake = "Test";
     public static String SelectedVehicleModel = "Test";
     public static String SummonLocation = "Test";
     public static String VehicleColor = "Test";
-    public static String VehicleMake = "Test";
-    public static String VehicleMakeModel = "Test";
+    public static String VehicleMake = "MERCEDES";
+    public static String VehicleMakeModel = "MERCEDES BENZ";
     public static String VehicleMakePos = "1234";
-    public static String VehicleModel = "Test";
+    public static String VehicleModel = "BENZ";
     public static String VehicleModelPos = "1234";
-    public static String VehicleNo = "Test";
-    public static String VehicleType = "Test";
+    public static String VehicleNo = "RH7907";
+    public static String VehicleType = "MOTOKAR";
     public static String VehicleTypePos = "1234";
-    public static String Witness = "Test";
+    public static String Witness = "ZULFADZLI BIN ANWAR";
 }

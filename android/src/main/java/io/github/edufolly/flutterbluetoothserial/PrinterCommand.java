@@ -41,6 +41,8 @@ class PrinterCommands {
     public static byte[] SET_RELATIVE_HORIZONTAL_POSITION = new byte[]{(byte) 27, (byte) 92};
     public static byte[] SET_RELATIVE_VERTICAL_POSITION = new byte[]{(byte) 29, (byte) 92};
     public static byte[] SET_RIGHT_SIDE_SPACING = new byte[]{(byte) 27, (byte) 32};
+    public static byte[] PRINT_TO_BLACK_MARK = new byte[]{(byte) 27, (byte) 122, (byte) 27, (byte) 121};
+    
 
     PrinterCommands() {
     }
