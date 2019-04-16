@@ -117,6 +117,7 @@ class NoticePrint {
   String color;
   String locationDetail;
   String location;
+  String area;
   String vehicleType;
   String date;
   String time;
@@ -132,6 +133,7 @@ class NoticePrint {
     'vehicle_make_model': this.vehicleMakeModel,
     'color': this.color,
     'location_detail': this.locationDetail,
+    'area': this.area,
     'location': this.location,
     'vehicle_type': this.vehicleType,
     'date': this.date,

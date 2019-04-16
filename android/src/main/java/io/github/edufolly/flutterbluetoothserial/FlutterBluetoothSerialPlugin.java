@@ -447,35 +447,35 @@ RequestPermissionsResultListener {
 
         //        // PrintBarCode(1.5d, 0.3d, Notice.NoticeSerialNo);
         PrintText(0.1d, 1.3d, "Arial", 9, false, "No. :", -1);
-        PrintText(0.4d, 0.0d, "Arial", 9, true, Notice.NoticeNo, -1);
+        PrintText(0.4d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("noticeNo")), -1);
         // PrintText(0.95d, 0.2d, "Arial", 10, true, "NOTIS KESALAHAN SERTA TAWARAN KOMPAUN", -1);
         // PrintText(2.5d, 0.0d, "Arial", 9, false, "NO. KENDERAAN", -1);
         // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleNo, -1);
         PrintText(2.1d, 0.0d, "Arial", 9, false, "No Cukai Jalan", -1);
-        PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleNo, -1);
+        PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicleNo")), -1);
         // PrintText(4.0d, 0.0d, "Arial", 9, false, "NO. CUKAI JALAN", -1);
         // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.RoadTaxNo, -1);
         PrintText(0.1d, 0.25d, "Arial", 9, false, "JENAMA / MODEL", -1);
-        String makeModel = Notice.VehicleMakeModel;
+        String makeModel = String.valueOf(notice.get("vehicleMakeModel"));
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + makeModel, -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "WARNA", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleColor, -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicleColor")), -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "JENIS BADAN", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleType, -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicleType")), -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "LOKASI / JALAN", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + Notice.OffenceLocationArea, -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("location")), -1);
 
-        if (Notice.OffenceLocationDetails.length() > 0) {
-            PrintText(0.95d, 0.15d, "Arial", 9, true, " : (" + Notice.OffenceLocationDetails + ")", -1);
+        if (String.valueOf(notice.get("locationDetail")).length() > 0) {
+            PrintText(0.95d, 0.15d, "Arial", 9, true, " : (" + String.valueOf(notice.get("locationDetail")) + ")", -1);
         } else {
             PrintText(0.95d, 0.15d, "Arial", 9, true, " : -", -1);
         }
-        PrintText(0.95d, 0.15d, "Arial", 9, true, " : " + Notice.OffenceLocation, -1);
+        PrintText(0.95d, 0.15d, "Arial", 9, true, " : " + String.valueOf(notice.get("area")), -1);
         PrintText(0.95d, 0.15d, "Arial", 9, true, " : W.P. PUTRAJAYA", -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "TARIKH", -1);
         PrintText(2.5d, 0.0d, "Arial", 9, false, "WAKTU", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + Notice.OffenceDate, -1);
-        PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.OffenceTime, -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("date")), -1);
+        PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("time")), -1);
         // PrintTextFlow("KEPADA PEMUNYA / PEMANDU KENDERAAN TERSEBUT DI ATAS, TUAN / PUAN DI DAPATI TELAH MELAKUKAN KESALAHAN SEPERTI BERIKUT :", 0.1d, 0.3d);
         PrintText(0.1d, 0.9d, "Arial", 9, true, "PERUNTUKAN UNDANG-UNDANG:", -1);
         PrintTextFlow(Notice.OffenceAct, 0.3d, 0.15d);
@@ -489,9 +489,9 @@ RequestPermissionsResultListener {
         PrintText(3.0d, 0.0d, "Arial", 9, false, "TARIKH :", -1);
         PrintText(3.5d, 0.0d, "Arial", 9, true, Notice.OffenceDateTime, -1);
 
-        PrintText(1.92d, 2.1d, "Arial", 9, true, "RM " + Notice.CompoundAmount1, -1);
-        PrintText(2.5d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount2, -1);
-        PrintText(3.18d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount3, -1);
+        PrintText(1.92d, 2.1d, "Arial", 9, true, "RM 30", -1);
+        PrintText(2.5d, 0.0d, "Arial", 9, true, "RM 50", -1);
+        PrintText(3.18d, 0.0d, "Arial", 9, true, "RM 100", -1);
         //         // PrintImage("logo.bmp", 0.15d, 0.05d, 0.0d, 0.0d, false);
         // PrintText(0.7d, 0.1d, "Arial", 9, true, "PERBADANAN PUTRAJAYA", -1);
         // PrintText(0.7d, 0.2d, "Arial", 8, false, "NO. KEND.", -1);
@@ -506,7 +506,7 @@ RequestPermissionsResultListener {
         // PrintText(2.7d, 0.4d, "Arial", 8, true, "KERATAN UNTUK CATATAN PEMBAYARAN", -1, true);
         // PrintText(2.2d, 0.1d, "Arial", 8, false, "TERIMA KASIH", -1, true);
         PrintText(3.2d, 1.1d, "Arial", 9, false, "No. :", -1, true);
-        PrintText(4.1d, 0.0d, "Arial", 9, true, Notice.NoticeNo, -1, true);
+        PrintText(4.1d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("noticeNo")), -1, true);
         PrintText(0.1d, 0.1d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
 
         // printData.add(PrinterCommands.PRINT_TO_BLACK_MARK);
