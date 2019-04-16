@@ -19,6 +19,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,6 +102,11 @@ RequestPermissionsResultListener {
 
             case "isAvailable":
             result.success(mBluetoothAdapter != null);
+            break;
+            
+            case "deviceSerial":
+            String serial =  GetDeviceSerialNo();
+            result.success(serial);
             break;
 
             case "isOn":
@@ -186,11 +193,13 @@ RequestPermissionsResultListener {
         break;
 
         case "printJob":
+        // Notice notice = new Notice();
         if (arguments.containsKey("notice_no")) {
             // String message = (String) arguments.get("message");
             // print(arguments);
-            NoticePrint notice = NoticePrint(arguments);
-            printJob(result, notice);
+            // Notice notice = Notice();
+            // notice.NoticeNo = arguments;
+            printJob(result, arguments);
             // testPrint(result, message);
                     // printJob(result, message);
                     // printJob(result, message);
@@ -248,21 +257,50 @@ RequestPermissionsResultListener {
         result.success(list);
     }
 
-    private void getNotice(String[] args) {
+    public static String GetDeviceSerialNo()
+    {
+        String serialNumber;
 
-        List<Map<String, Object>> list = new ArrayList<>();
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method get = c.getMethod("get", String.class);
 
-        for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
-            Map<String, Object> ret = new HashMap<>();
-            ret.put("address", device.getAddress());
-            ret.put("name", device.getName());
-            ret.put("type", device.getType());
-            ret.put("status", "bonded");
-            list.add(ret);
+            serialNumber = (String) get.invoke(c, "gsm.sn1");
+            if (serialNumber.equals(""))
+                serialNumber = (String) get.invoke(c, "ril.serialnumber");
+            if (serialNumber.equals(""))
+                serialNumber = (String) get.invoke(c, "ro.serialno");
+            if (serialNumber.equals(""))
+                serialNumber = (String) get.invoke(c, "sys.serialnumber");
+            if (serialNumber.equals(""))
+                serialNumber = Build.SERIAL;
+
+        // If none of the methods above worked
+            if (serialNumber.equals(""))
+                serialNumber = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            serialNumber = null;
         }
 
-        result.success(list);
+        return serialNumber.toUpperCase();
     }
+
+    // private void getNotice(String[] args) {
+
+    //     List<Map<String, Object>> list = new ArrayList<>();
+
+    //     for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
+    //         Map<String, Object> ret = new HashMap<>();
+    //         ret.put("address", device.getAddress());
+    //         ret.put("name", device.getName());
+    //         ret.put("type", device.getType());
+    //         ret.put("status", "bonded");
+    //         list.add(ret);
+    //     }
+
+    //     result.success(list);
+    // }
 
     private String exceptionToString(Exception ex) {
         StringWriter sw = new StringWriter();
@@ -402,73 +440,73 @@ RequestPermissionsResultListener {
     }
 
 
-    private void printJob(Result result, NoticePrint notice) {
-        String officerDetails = notice.officer;
+    private void printJob(Result result, Map notice) {
+        String officerDetails = String.valueOf(notice.get("officer"));
         InitPrinterTraffic();
         // PrintText(PosX, IncY, FontType, FontSize, FontBold, strVariable, nLimit, RightJustified);
 
         //        // PrintBarCode(1.5d, 0.3d, Notice.NoticeSerialNo);
         PrintText(0.1d, 1.3d, "Arial", 9, false, "No. :", -1);
-        PrintText(0.4d, 0.0d, "Arial", 9, true, NoticePrint.NoticeNo, -1);
+        PrintText(0.4d, 0.0d, "Arial", 9, true, Notice.NoticeNo, -1);
         // PrintText(0.95d, 0.2d, "Arial", 10, true, "NOTIS KESALAHAN SERTA TAWARAN KOMPAUN", -1);
         // PrintText(2.5d, 0.0d, "Arial", 9, false, "NO. KENDERAAN", -1);
-        // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + NoticePrint.VehicleNo, -1);
+        // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleNo, -1);
         PrintText(2.1d, 0.0d, "Arial", 9, false, "No Cukai Jalan", -1);
-        PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + NoticePrint.VehicleNo, -1);
+        PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleNo, -1);
         // PrintText(4.0d, 0.0d, "Arial", 9, false, "NO. CUKAI JALAN", -1);
-        // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + NoticePrint.RoadTaxNo, -1);
+        // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.RoadTaxNo, -1);
         PrintText(0.1d, 0.25d, "Arial", 9, false, "JENAMA / MODEL", -1);
-        String makeModel = NoticePrint.VehicleMakeModel;
+        String makeModel = Notice.VehicleMakeModel;
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + makeModel, -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "WARNA", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + NoticePrint.VehicleColor, -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleColor, -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "JENIS BADAN", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + NoticePrint.VehicleType, -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleType, -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "LOKASI / JALAN", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + NoticePrint.OffenceLocationArea, -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + Notice.OffenceLocationArea, -1);
 
-        if (NoticePrint.OffenceLocationDetails.length() > 0) {
-            PrintText(0.95d, 0.15d, "Arial", 9, true, " : (" + NoticePrint.OffenceLocationDetails + ")", -1);
+        if (Notice.OffenceLocationDetails.length() > 0) {
+            PrintText(0.95d, 0.15d, "Arial", 9, true, " : (" + Notice.OffenceLocationDetails + ")", -1);
         } else {
             PrintText(0.95d, 0.15d, "Arial", 9, true, " : -", -1);
         }
-        PrintText(0.95d, 0.15d, "Arial", 9, true, " : " + NoticePrint.OffenceLocation, -1);
+        PrintText(0.95d, 0.15d, "Arial", 9, true, " : " + Notice.OffenceLocation, -1);
         PrintText(0.95d, 0.15d, "Arial", 9, true, " : W.P. PUTRAJAYA", -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "TARIKH", -1);
         PrintText(2.5d, 0.0d, "Arial", 9, false, "WAKTU", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + NoticePrint.OffenceDate, -1);
-        PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + NoticePrint.OffenceTime, -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + Notice.OffenceDate, -1);
+        PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.OffenceTime, -1);
         // PrintTextFlow("KEPADA PEMUNYA / PEMANDU KENDERAAN TERSEBUT DI ATAS, TUAN / PUAN DI DAPATI TELAH MELAKUKAN KESALAHAN SEPERTI BERIKUT :", 0.1d, 0.3d);
-        PrintText(0.1d, 1.0d, "Arial", 9, true, "PERUNTUKAN UNDANG-UNDANG:", -1);
-        PrintTextFlow(NoticePrint.OffenceAct, 0.3d, 0.15d);
+        PrintText(0.1d, 0.9d, "Arial", 9, true, "PERUNTUKAN UNDANG-UNDANG:", -1);
+        PrintTextFlow(Notice.OffenceAct, 0.3d, 0.15d);
         PrintText(0.1d, 0.15d, "Arial", 9, true, "SEKSYEN / KAEDAH / PERENGGAN :", -1);
-        PrintTextFlow(NoticePrint.OffenceSection, 0.3d, 0.15d);
+        PrintTextFlow(Notice.OffenceSection, 0.3d, 0.15d);
         PrintText(0.1d, 0.15d, "Arial", 9, true, "KESALAHAN :", -1);
-        PrintTextFlow(NoticePrint.Offence, 0.3d, 0.15d);
-        PrintText(0.1d, 0.3d, "Arial", 9, false, "DIKELUARKAN OLEH :", -1);
+        PrintTextFlow(Notice.Offence, 0.3d, 0.15d);
+        PrintText(0.1d, 0.4d, "Arial", 9, false, "DIKELUARKAN OLEH :", -1);
         PrintText(1.1d, 0.0d, "Arial", 9, true, officerDetails, -1);
         PrintText(1.1d, 0.1d, "Arial", 9, false, "WARDEN LALULINTAS", -1);
         PrintText(3.0d, 0.0d, "Arial", 9, false, "TARIKH :", -1);
-        PrintText(3.5d, 0.0d, "Arial", 9, true, NoticePrint.OffenceDateTime, -1);
+        PrintText(3.5d, 0.0d, "Arial", 9, true, Notice.OffenceDateTime, -1);
 
-        PrintText(1.92d, 2.1d, "Arial", 9, true, "RM " + NoticePrint.CompoundAmount1, -1);
-        PrintText(2.5d, 0.0d, "Arial", 9, true, "RM " + NoticePrint.CompoundAmount2, -1);
-        PrintText(3.18d, 0.0d, "Arial", 9, true, "RM " + NoticePrint.CompoundAmount3, -1);
+        PrintText(1.92d, 2.1d, "Arial", 9, true, "RM " + Notice.CompoundAmount1, -1);
+        PrintText(2.5d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount2, -1);
+        PrintText(3.18d, 0.0d, "Arial", 9, true, "RM " + Notice.CompoundAmount3, -1);
         //         // PrintImage("logo.bmp", 0.15d, 0.05d, 0.0d, 0.0d, false);
         // PrintText(0.7d, 0.1d, "Arial", 9, true, "PERBADANAN PUTRAJAYA", -1);
         // PrintText(0.7d, 0.2d, "Arial", 8, false, "NO. KEND.", -1);
-        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + NoticePrint.VehicleNo, -1);
+        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.VehicleNo, -1);
         // PrintText(0.7d, 0.1d, "Arial", 8, false, "PERUNTUKAN", -1);
-        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + NoticePrint.OffenceAct, 50);
+        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceAct, 50);
         // PrintText(0.7d, 0.1d, "Arial", 8, false, "SEKSYEN/KAEDAH", -1);
-        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + NoticePrint.OffenceSection, -1);
+        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceSection, -1);
         // PrintText(0.7d, 0.1d, "Arial", 8, false, "TARIKH", -1);
-        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + NoticePrint.OffenceDateTime, -1);
+        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceDateTime, -1);
                 // PrintRect(0.1d, 0.2d, 4.0d, 0.4d);
         // PrintText(2.7d, 0.4d, "Arial", 8, true, "KERATAN UNTUK CATATAN PEMBAYARAN", -1, true);
         // PrintText(2.2d, 0.1d, "Arial", 8, false, "TERIMA KASIH", -1, true);
         PrintText(3.2d, 1.1d, "Arial", 9, false, "No. :", -1, true);
-        PrintText(4.1d, 0.0d, "Arial", 9, true, NoticePrint.NoticeNo, -1, true);
+        PrintText(4.1d, 0.0d, "Arial", 9, true, Notice.NoticeNo, -1, true);
         PrintText(0.1d, 0.1d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
 
         // printData.add(PrinterCommands.PRINT_TO_BLACK_MARK);
@@ -836,39 +874,39 @@ RequestPermissionsResultListener {
     };
 }
 
-class NoticePrint {
-    public double CompoundAmount1 = 50.00;
-    public double CompoundAmount2 = 80.00;
-    public double CompoundAmount3 = 100.00;
-    public String CompoundDate = "2019/01/11";
-    public String CompoundExpiryDateString = "Test";
-    public String HandheldCode = "AC7";
-    public List<String> ImageLocation;
-    public String ImageLocation1 = "AC745679187Pic0.jpg";
-    public String ImageLocation2 = "AC745679187Pic1.jpg";
-    public String ImageLocation3 = "AC745679187Pic2.jpg";
-    public String NoticeId = "1234";
-    public String NoticeNo = "AC745679187";
-    public String Offence = "MENYEBABKAN/MEMBENARKAN KENDERAAN DIHENTIKAN DI JALAN DALAM KEDUDUKAN /KEADAAN YG MUNGKIN MENYEBABKAN BAHAYA/HALANGAN/KESUSAHAN KEPADA PENGGUNA/LALULINTAS";
-    public String OffenceAct = "AKTA PENGANGKUTAN JALAN 1987";
-    public String OffenceActCode = "04";
-    public String OffenceDateTime = "2019/01/11";
-    public String OffenceDate = "2019/01/11";
-    public String OffenceTime = "14:02:10";
-    public String OffenceLocation = "TAMAN WAWASAN";
-    public String OffenceLocationArea = "PRESINT 2";
-    public String OffenceLocationDetails = "IKN";
-    public String OffenceSection = "SEKSYEN 48";
-    public String RoadTaxNo = "42718384";
-    public String VehicleColor = "Test";
-    public String VehicleMake = "MERCEDES";
-    public String VehicleMakeModel = "MERCEDES BENZ";
-    public String VehicleNo = "RH7907";
-    public String VehicleType = "MOTOKAR";
-    public String Witness = "ZULFADZLI BIN ANWAR";
+class Notice {
+    public static double CompoundAmount1 = 50.00;
+    public static double CompoundAmount2 = 80.00;
+    public static double CompoundAmount3 = 100.00;
+    public static String CompoundDate = "2019/01/11";
+    public static String CompoundExpiryDateString = "Test";
+    public static String HandheldCode = "AC7";
+    public static List<String> ImageLocation;
+    public static String ImageLocation1 = "AC745679187Pic0.jpg";
+    public static String ImageLocation2 = "AC745679187Pic1.jpg";
+    public static String ImageLocation3 = "AC745679187Pic2.jpg";
+    public static String NoticeId = "1234";
+    public static String NoticeNo = "AC745679187";
+    public static String Offence = "MENYEBABKAN/MEMBENARKAN KENDERAAN DIHENTIKAN DI JALAN DALAM KEDUDUKAN /KEADAAN YG MUNGKIN MENYEBABKAN BAHAYA/HALANGAN/KESUSAHAN KEPADA PENGGUNA/LALULINTAS";
+    public static String OffenceAct = "AKTA PENGANGKUTAN JALAN 1987";
+    public static String OffenceActCode = "04";
+    public static String OffenceDateTime = "2019/01/11";
+    public static String OffenceDate = "2019/01/11";
+    public static String OffenceTime = "14:02:10";
+    public static String OffenceLocation = "TAMAN WAWASAN";
+    public static String OffenceLocationArea = "PRESINT 2";
+    public static String OffenceLocationDetails = "IKN";
+    public static String OffenceSection = "SEKSYEN 48";
+    public static String RoadTaxNo = "42718384";
+    public static String VehicleColor = "Test";
+    public static String VehicleMake = "MERCEDES";
+    public static String VehicleMakeModel = "MERCEDES BENZ";
+    public static String VehicleNo = "RH7907";
+    public static String VehicleType = "MOTOKAR";
+    public static String Witness = "ZULFADZLI BIN ANWAR";
 
     public static void main(String[] args) {
-        NoticePrint myObj = new NoticePrint(); // Create an object of class MyClass (This will call the constructor)
+        Notice myObj = new Notice(); // Create an object of class MyClass (This will call the constructor)
         // System.out.println(myObj.x); // Print the value of x
     }
 }

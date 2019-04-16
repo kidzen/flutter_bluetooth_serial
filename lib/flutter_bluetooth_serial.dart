@@ -21,23 +21,23 @@ class FlutterBluetoothSerial {
   static const String namespace = 'flutter_bluetooth_serial';
 
   static const MethodChannel _channel =
-      const MethodChannel('$namespace/methods');
+  const MethodChannel('$namespace/methods');
 
   static const EventChannel _readChannel =
-      const EventChannel('$namespace/read');
+  const EventChannel('$namespace/read');
 
   static const EventChannel _stateChannel =
-      const EventChannel('$namespace/state');
+  const EventChannel('$namespace/state');
 
   final StreamController<MethodCall> _methodStreamController =
-      new StreamController.broadcast();
+  new StreamController.broadcast();
 
   Stream<MethodCall> get _methodStream => _methodStreamController.stream;
 
   FlutterBluetoothSerial._() {
     _channel.setMethodCallHandler((MethodCall call) {
       _methodStreamController.add(call);
-    });
+      });
   }
 
   static FlutterBluetoothSerial _instance = new FlutterBluetoothSerial._();
@@ -45,21 +45,24 @@ class FlutterBluetoothSerial {
   static FlutterBluetoothSerial get instance => _instance;
 
   Stream<int> onStateChanged() =>
-      _stateChannel.receiveBroadcastStream().map((buffer) => buffer);
+  _stateChannel.receiveBroadcastStream().map((buffer) => buffer);
 
   Stream<String> onRead() =>
-      _readChannel.receiveBroadcastStream().map((buffer) => buffer.toString());
+  _readChannel.receiveBroadcastStream().map((buffer) => buffer.toString());
 
   Future<bool> get isAvailable async =>
-      await _channel.invokeMethod('isAvailable');
+  await _channel.invokeMethod('isAvailable');
+
+  Future<String> get deviceSerial async =>
+  await _channel.invokeMethod('deviceSerial');
 
   Future<bool> get isOn async => await _channel.invokeMethod('isOn');
 
   Future<bool> get isConnected async =>
-      await _channel.invokeMethod('isConnected');
+  await _channel.invokeMethod('isConnected');
 
   Future<bool> get openSettings async =>
-      await _channel.invokeMethod('openSettings');
+  await _channel.invokeMethod('openSettings');
 
   Future<List> getBondedDevices() async {
     final List list = await _channel.invokeMethod('getBondedDevices');
@@ -67,21 +70,21 @@ class FlutterBluetoothSerial {
   }
 
   Future<dynamic> connect(BluetoothDevice device) =>
-      _channel.invokeMethod('connect', device.toMap());
+  _channel.invokeMethod('connect', device.toMap());
 
   Future<dynamic> disconnect() => _channel.invokeMethod('disconnect');
 
   Future<dynamic> write(String message) =>
-      _channel.invokeMethod('write', {'message': message});
+  _channel.invokeMethod('write', {'message': message});
 
-  Future<dynamic> printJob(Notice notice) async =>
-      await _channel.invokeMethod('printJob', notice.toMap());
+  Future<dynamic> printJob(NoticePrint notice) async =>
+  await _channel.invokeMethod('printJob', notice.toMap());
 
   Future<dynamic> testPrint(String message) =>
-      _channel.invokeMethod('testPrint', {'message': message});
+  _channel.invokeMethod('testPrint', {'message': message});
 
   Future<dynamic> writeBytes(Uint8List bytes) =>
-      _channel.invokeMethod('writeBytes', {'message': bytes});
+  _channel.invokeMethod('writeBytes', {'message': bytes});
 }
 
 
@@ -93,51 +96,51 @@ class BluetoothDevice {
   bool connected = false;
 
   BluetoothDevice.fromMap(Map map)
-      : name = map['name'],
-        address = map['address'],
-        type = map['type'],
-        status = map['status'];
+  : name = map['name'],
+  address = map['address'],
+  type = map['type'],
+  status = map['status'];
 
   Map<String, dynamic> toMap() => {
-        'name': this.name,
-        'address': this.address,
-        'type': this.type,
-        'status': this.status,
-        'connected': this.connected,
-      };
+    'name': this.name,
+    'address': this.address,
+    'type': this.type,
+    'status': this.status,
+    'connected': this.connected,
+  };
 }
 
-class Notice {
-  final String noticeNo;
-  final String roadtax;
-  final String vehicleMakeModel;
-  final String color;
-  final String locationDetail;
-  final String location;
-  final String vehicleType;
-  final String date;
-  final String time;
-  final String actStd;
-  final String actReg;
-  final String offence;
-  final String officer;
-  final String expiredDate;
+class NoticePrint {
+  String noticeNo;
+  String roadtax;
+  String vehicleMakeModel;
+  String color;
+  String locationDetail;
+  String location;
+  String vehicleType;
+  String date;
+  String time;
+  String actStd;
+  String actReg;
+  String offence;
+  String officer;
+  String expiredDate;
 
   Map<String, dynamic> toMap() => {
-        'notice_no': this.noticeNo,
-        'roadtax': this.roadtax,
-        'vehicle_make_model': this.vehicleMakeModel,
-        'color': this.color,
-        'location_detail': this.locationDetail,
-        'location': this.location,
-        'vehicle_type': this.vehicleType,
-        'date': this.date,
-        'time': this.time,
-        'act_std': this.actStd,
-        'act_reg': this.actReg,
-        'offence': this.offence,
-        'officer': this.officer,
-        'expired_date': this.expiredDate,
-      };
+    'notice_no': this.noticeNo,
+    'roadtax': this.roadtax,
+    'vehicle_make_model': this.vehicleMakeModel,
+    'color': this.color,
+    'location_detail': this.locationDetail,
+    'location': this.location,
+    'vehicle_type': this.vehicleType,
+    'date': this.date,
+    'time': this.time,
+    'act_std': this.actStd,
+    'act_reg': this.actReg,
+    'offence': this.offence,
+    'officer': this.officer,
+    'expired_date': this.expiredDate,
+  };
 }
 
