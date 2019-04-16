@@ -447,26 +447,26 @@ RequestPermissionsResultListener {
 
         //        // PrintBarCode(1.5d, 0.3d, Notice.NoticeSerialNo);
         PrintText(0.1d, 1.3d, "Arial", 9, false, "No. :", -1);
-        PrintText(0.4d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("noticeNo")), -1);
+        PrintText(0.4d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("notice_no")), -1);
         // PrintText(0.95d, 0.2d, "Arial", 10, true, "NOTIS KESALAHAN SERTA TAWARAN KOMPAUN", -1);
         // PrintText(2.5d, 0.0d, "Arial", 9, false, "NO. KENDERAAN", -1);
         // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleNo, -1);
         PrintText(2.1d, 0.0d, "Arial", 9, false, "No Cukai Jalan", -1);
-        PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicleNo")), -1);
+        PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicle_no")), -1);
         // PrintText(4.0d, 0.0d, "Arial", 9, false, "NO. CUKAI JALAN", -1);
         // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.RoadTaxNo, -1);
         PrintText(0.1d, 0.25d, "Arial", 9, false, "JENAMA / MODEL", -1);
-        String makeModel = String.valueOf(notice.get("vehicleMakeModel"));
+        String makeModel = String.valueOf(notice.get("vehicle_make_model"));
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + makeModel, -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "WARNA", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicleColor")), -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicle_color")), -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "JENIS BADAN", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicleType")), -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicle_type")), -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "LOKASI / JALAN", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("location")), -1);
 
-        if (String.valueOf(notice.get("locationDetail")).length() > 0) {
-            PrintText(0.95d, 0.15d, "Arial", 9, true, " : (" + String.valueOf(notice.get("locationDetail")) + ")", -1);
+        if (String.valueOf(notice.get("location_detail")).length() > 0) {
+            PrintText(0.95d, 0.15d, "Arial", 9, true, " : (" + String.valueOf(notice.get("location_detail")) + ")", -1);
         } else {
             PrintText(0.95d, 0.15d, "Arial", 9, true, " : -", -1);
         }
@@ -506,7 +506,7 @@ RequestPermissionsResultListener {
         // PrintText(2.7d, 0.4d, "Arial", 8, true, "KERATAN UNTUK CATATAN PEMBAYARAN", -1, true);
         // PrintText(2.2d, 0.1d, "Arial", 8, false, "TERIMA KASIH", -1, true);
         PrintText(3.2d, 1.1d, "Arial", 9, false, "No. :", -1, true);
-        PrintText(4.1d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("noticeNo")), -1, true);
+        PrintText(4.1d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("notice_no")), -1, true);
         PrintText(0.1d, 0.1d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
 
         // printData.add(PrinterCommands.PRINT_TO_BLACK_MARK);
