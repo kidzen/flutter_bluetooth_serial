@@ -193,17 +193,8 @@ RequestPermissionsResultListener {
         break;
 
         case "printJob":
-        // Notice notice = new Notice();
         if (arguments.containsKey("notice_no")) {
-            // String message = (String) arguments.get("message");
-            // print(arguments);
-            // Notice notice = Notice();
-            // notice.NoticeNo = arguments;
             printJob(result, arguments);
-            // testPrint(result, message);
-                    // printJob(result, message);
-                    // printJob(result, message);
-                    // testPrint(result, message);
         } else {
             result.error("invalid_argument", "argument 'message' not found", null);
         }
@@ -452,14 +443,14 @@ RequestPermissionsResultListener {
         // PrintText(2.5d, 0.0d, "Arial", 9, false, "NO. KENDERAAN", -1);
         // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleNo, -1);
         PrintText(2.1d, 0.0d, "Arial", 9, false, "No Cukai Jalan", -1);
-        PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicle_no")), -1);
+        PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("roadtax")), -1);
         // PrintText(4.0d, 0.0d, "Arial", 9, false, "NO. CUKAI JALAN", -1);
         // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.RoadTaxNo, -1);
         PrintText(0.1d, 0.25d, "Arial", 9, false, "JENAMA / MODEL", -1);
         String makeModel = String.valueOf(notice.get("vehicle_make_model"));
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + makeModel, -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "WARNA", -1);
-        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicle_color")), -1);
+        PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("color")), -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "JENIS BADAN", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicle_type")), -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "LOKASI / JALAN", -1);
@@ -487,7 +478,7 @@ RequestPermissionsResultListener {
         PrintText(1.1d, 0.0d, "Arial", 9, true, officerDetails, -1);
         PrintText(1.1d, 0.1d, "Arial", 9, false, "WARDEN LALULINTAS", -1);
         PrintText(3.0d, 0.0d, "Arial", 9, false, "TARIKH :", -1);
-        PrintText(3.5d, 0.0d, "Arial", 9, true, Notice.OffenceDateTime, -1);
+        PrintText(3.5d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("date")), -1);
 
         PrintText(1.92d, 2.1d, "Arial", 9, true, "RM 30", -1);
         PrintText(2.5d, 0.0d, "Arial", 9, true, "RM 50", -1);
