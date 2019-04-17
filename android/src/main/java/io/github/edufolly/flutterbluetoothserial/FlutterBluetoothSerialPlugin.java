@@ -8,10 +8,12 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,6 +23,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.content.res.AssetFileDescriptor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -480,10 +483,10 @@ RequestPermissionsResultListener {
         PrintText(3.0d, 0.0d, "Arial", 9, false, "TARIKH :", -1);
         PrintText(3.5d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("date")), -1);
 
-        PrintText(1.92d, 2.1d, "Arial", 9, true, "RM 30", -1);
+        PrintText(1.92d, 1.1d, "Arial", 9, true, "RM 30", -1);
         PrintText(2.5d, 0.0d, "Arial", 9, true, "RM 50", -1);
         PrintText(3.18d, 0.0d, "Arial", 9, true, "RM 100", -1);
-        //         // PrintImage("logo.bmp", 0.15d, 0.05d, 0.0d, 0.0d, false);
+                PrintImage(registrar, "assets/ppj/signature.bmp", 0.15d, 0.05d, 0.0d, 0.0d, false);
         // PrintText(0.7d, 0.1d, "Arial", 9, true, "PERBADANAN PUTRAJAYA", -1);
         // PrintText(0.7d, 0.2d, "Arial", 8, false, "NO. KEND.", -1);
         // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.VehicleNo, -1);
@@ -498,6 +501,7 @@ RequestPermissionsResultListener {
         // PrintText(2.2d, 0.1d, "Arial", 8, false, "TERIMA KASIH", -1, true);
         PrintText(3.2d, 1.1d, "Arial", 9, false, "No. :", -1, true);
         PrintText(4.1d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("notice_no")), -1, true);
+        PrintImage(registrar, "signature.bmp", 0.2, 0.4, 0, 0, false);
         PrintText(0.1d, 0.1d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
 
         // printData.add(PrinterCommands.PRINT_TO_BLACK_MARK);
@@ -523,6 +527,38 @@ RequestPermissionsResultListener {
             Log.e(TAG, ex.getMessage(), ex);
             result.error("write_error", ex.getMessage(), exceptionToString(ex));
         }
+    }
+
+    private static void PrintImage(Registrar registrar, String imgFileName, double PosX, double IncY, double Width, double Height, boolean Aspect) {
+        Paint p = new Paint();
+
+        p.setColor(Color.BLACK);
+        p.setTextSize(20);
+
+        InputStream stBmp = null;
+        
+        try {
+            // AssetManager assetManager = registrar.context().getAssets();
+            // stBmp = assetManager.getAssets().open(imgFileName);
+
+            AssetManager assetManager = registrar.context().getAssets();
+            String key = registrar.lookupKeyForAsset(imgFileName);
+            AssetFileDescriptor fd = assetManager.openFd(key);
+            stBmp = fd;
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        
+        Bitmap temp = BitmapFactory.decodeStream(stBmp);
+        
+        PosY += IncY;
+        
+        float xPos = (float)PosX * 200;
+        float yPos = (float)PosY * 200;
+        
+        c.drawBitmap(temp, xPos, yPos, p);
+        c.save();
     }
 
     private void testPrint(Result result, String message) {
