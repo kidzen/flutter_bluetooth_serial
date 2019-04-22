@@ -196,8 +196,8 @@ RequestPermissionsResultListener {
         break;
 
         case "printJob":
-        if (arguments.containsKey("notice_no")) {
-            printJob(result, arguments);
+        if (arguments.containsKey("notice")) {
+            printJob(result, (Map) arguments.get("notice"), (byte[]) arguments.get("signature"));
         } else {
             result.error("invalid_argument", "argument 'message' not found", null);
         }
@@ -434,28 +434,26 @@ RequestPermissionsResultListener {
     }
 
 
-    private void printJob(Result result, Map notice) {
+    private void printJob(Result result, Map notice, byte[] signatureByte) {
         String officerDetails = String.valueOf(notice.get("officer"));
         InitPrinterTraffic();
         // PrintText(PosX, IncY, FontType, FontSize, FontBold, strVariable, nLimit, RightJustified);
 
-        //        // PrintBarCode(1.5d, 0.3d, Notice.NoticeSerialNo);
-        PrintText(0.1d, 1.3d, "Arial", 9, false, "No. :", -1);
-        PrintText(0.4d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("notice_no")), -1);
-        // PrintText(0.95d, 0.2d, "Arial", 10, true, "NOTIS KESALAHAN SERTA TAWARAN KOMPAUN", -1);
-        // PrintText(2.5d, 0.0d, "Arial", 9, false, "NO. KENDERAAN", -1);
-        // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.VehicleNo, -1);
-        PrintText(2.1d, 0.0d, "Arial", 9, false, "No Cukai Jalan", -1);
+        // PrintRect(2.1d, 0.0d, 4.0d, 0.4d);
+        // PrintBarCode(registrar, 1.5d, 0.3d, String.valueOf(notice.get("notice_no")));
+        PrintText(0.1d, 1.3d, "Arial", 9, false, "No.", -1);
+        PrintText(0.4d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("notice_no")), -1);
+        PrintText(2.3d, 0.0d, "Arial", 9, false, "NO. CUKAI JALAN", -1);
         PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("roadtax")), -1);
-        // PrintText(4.0d, 0.0d, "Arial", 9, false, "NO. CUKAI JALAN", -1);
-        // PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + Notice.RoadTaxNo, -1);
         PrintText(0.1d, 0.25d, "Arial", 9, false, "JENAMA / MODEL", -1);
+        PrintText(2.8d, 0.0d, "Arial", 9, false, "NO KENDERAAN", -1);
         String makeModel = String.valueOf(notice.get("vehicle_make_model"));
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + makeModel, -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "WARNA", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("color")), -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "JENIS BADAN", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicle_type")), -1);
+        PrintText(2.8d, 0.0d, "Arial", 20, false, String.valueOf(notice.get("vehicle_no")), -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "LOKASI / JALAN", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("location")), -1);
 
@@ -467,42 +465,41 @@ RequestPermissionsResultListener {
         PrintText(0.95d, 0.15d, "Arial", 9, true, " : " + String.valueOf(notice.get("area")), -1);
         PrintText(0.95d, 0.15d, "Arial", 9, true, " : W.P. PUTRAJAYA", -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "TARIKH", -1);
-        PrintText(2.5d, 0.0d, "Arial", 9, false, "WAKTU", -1);
+        PrintText(3.0d, 0.0d, "Arial", 9, false, "WAKTU", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("date")), -1);
-        PrintText(2.85d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("time")), -1);
-        // PrintTextFlow("KEPADA PEMUNYA / PEMANDU KENDERAAN TERSEBUT DI ATAS, TUAN / PUAN DI DAPATI TELAH MELAKUKAN KESALAHAN SEPERTI BERIKUT :", 0.1d, 0.3d);
-        PrintText(0.1d, 0.9d, "Arial", 9, true, "PERUNTUKAN UNDANG-UNDANG:", -1);
-        PrintTextFlow(Notice.OffenceAct, 0.3d, 0.15d);
-        PrintText(0.1d, 0.15d, "Arial", 9, true, "SEKSYEN / KAEDAH / PERENGGAN :", -1);
-        PrintTextFlow(Notice.OffenceSection, 0.3d, 0.15d);
+        PrintText(3.5d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("time")), -1);
+        PrintText(0.1d, 0.8d, "Arial", 9, true, "PERUNTUKAN UNDANG-UNDANG:", -1);
+        PrintTextFlow(String.valueOf(notice.get("act_std")), 0.3d, 0.15d);
+        PrintText(0.1d, 0.25d, "Arial", 9, true, "SEKSYEN / KAEDAH / PERENGGAN :", -1);
+        PrintTextFlow(String.valueOf(notice.get("act_reg")), 0.3d, 0.15d);
         PrintText(0.1d, 0.15d, "Arial", 9, true, "KESALAHAN :", -1);
-        PrintTextFlow(Notice.Offence, 0.3d, 0.15d);
-        PrintText(0.1d, 0.4d, "Arial", 9, false, "DIKELUARKAN OLEH :", -1);
+        PrintTextFlow(String.valueOf(notice.get("offence")), 0.3d, 0.15d);
+        PrintText(0.1d, 0.47d, "Arial", 9, false, "DIKELUARKAN OLEH :", -1);
         PrintText(1.1d, 0.0d, "Arial", 9, true, officerDetails, -1);
         PrintText(1.1d, 0.1d, "Arial", 9, false, "WARDEN LALULINTAS", -1);
         PrintText(3.0d, 0.0d, "Arial", 9, false, "TARIKH :", -1);
         PrintText(3.5d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("date")), -1);
 
-        PrintText(1.92d, 1.1d, "Arial", 9, true, "RM 30", -1);
-        PrintText(2.5d, 0.0d, "Arial", 9, true, "RM 50", -1);
-        PrintText(3.18d, 0.0d, "Arial", 9, true, "RM 100", -1);
-                PrintImage(registrar, "assets/ppj/signature.bmp", 0.15d, 0.05d, 0.0d, 0.0d, false);
-        // PrintText(0.7d, 0.1d, "Arial", 9, true, "PERBADANAN PUTRAJAYA", -1);
-        // PrintText(0.7d, 0.2d, "Arial", 8, false, "NO. KEND.", -1);
-        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.VehicleNo, -1);
-        // PrintText(0.7d, 0.1d, "Arial", 8, false, "PERUNTUKAN", -1);
-        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceAct, 50);
-        // PrintText(0.7d, 0.1d, "Arial", 8, false, "SEKSYEN/KAEDAH", -1);
-        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceSection, -1);
-        // PrintText(0.7d, 0.1d, "Arial", 8, false, "TARIKH", -1);
-        // PrintText(1.55d, 0.0d, "Arial", 8, true, " : " + Notice.OffenceDateTime, -1);
-                // PrintRect(0.1d, 0.2d, 4.0d, 0.4d);
-        // PrintText(2.7d, 0.4d, "Arial", 8, true, "KERATAN UNTUK CATATAN PEMBAYARAN", -1, true);
-        // PrintText(2.2d, 0.1d, "Arial", 8, false, "TERIMA KASIH", -1, true);
-        PrintText(3.2d, 1.1d, "Arial", 9, false, "No. :", -1, true);
-        PrintText(4.1d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("notice_no")), -1, true);
-        PrintImage(registrar, "signature.bmp", 0.2, 0.4, 0, 0, false);
-        PrintText(0.1d, 0.1d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
+        PrintText(1.85d, 1.9d, "Arial", 9, true, "RM 30", -1);
+        // PrintText(1.92d, 1.1d, "Arial", 9, true, "RM 30", -1);
+        PrintText(2.4d, 0.0d, "Arial", 9, true, "RM 50", -1);
+        PrintText(3.10d, 0.0d, "Arial", 9, true, "RM 100", -1);
+
+        // PrintText(0.1d, 0.8d, "Arial", 9, true, "NO KENDERAAN:", -1);
+        // PrintTextFlow(String.valueOf(notice.get("act_std")), 0.3d, 0.15d);
+        // PrintText(0.1d, 0.8d, "Arial", 9, true, "PERUNTUKAN UNDANG-UNDANG:", -1);
+        // PrintTextFlow(String.valueOf(notice.get("act_std")), 0.3d, 0.15d);
+        // PrintText(0.1d, 0.25d, "Arial", 9, true, "SEKSYEN / KAEDAH / PERENGGAN :", -1);
+        // PrintTextFlow(String.valueOf(notice.get("act_reg")), 0.3d, 0.15d);
+        // PrintText(3.2d, 0.1d, "Arial", 9, false, "No. :", -1, true);
+        // PrintText(4.1d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("notice_no")), -1, true);
+        // PrintText(0.1d, 0.15d, "Arial", 9, false, "TARIKH", -1);
+        // PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("date")), -1);
+
+        PrintImage(registrar, signatureByte, 0.1d, 1.0d, 0.0d, 0.0d, false);
+        PrintText(0.1d, 0.3d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
+
+        // PrintImage(registrar, "signature.bmp", 0.2, 0.4, 0, 0, false);
 
         // printData.add(PrinterCommands.PRINT_TO_BLACK_MARK);
         c.save();
@@ -529,29 +526,35 @@ RequestPermissionsResultListener {
         }
     }
 
-    private static void PrintImage(Registrar registrar, String imgFileName, double PosX, double IncY, double Width, double Height, boolean Aspect) {
+    private static void PrintImage(Registrar registrar, byte[] signatureByte, double PosX, double IncY, double Width, double Height, boolean Aspect) {
         Paint p = new Paint();
 
         p.setColor(Color.BLACK);
-        p.setTextSize(20);
+        p.setTextSize(30);
 
-        InputStream stBmp = null;
-        
-        try {
-            // AssetManager assetManager = registrar.context().getAssets();
-            // stBmp = assetManager.getAssets().open(imgFileName);
+        // InputStream stBmp = null;
+        // BufferedImage image = null;
+//         try {
+//             // AssetManager assetManager = registrar.context().getAssets();
+//             // stBmp = assetManager.getAssets().open(imgFileName);
 
-            AssetManager assetManager = registrar.context().getAssets();
-            String key = registrar.lookupKeyForAsset(imgFileName);
-            AssetFileDescriptor fd = assetManager.openFd(key);
-            stBmp = fd;
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+//            AssetManager assetManager = registrar.context().getAssets();
+//            // String key = registrar.lookupKeyForAsset(imgFileName);
+//            // AssetFileDescriptor fd = assetManager.openFd(key);
+// //            stBmp = fd.createInputStream();
+
+//         } catch (IOException e1) {
+//             // TODO Auto-generated catch block
+//             e1.printStackTrace();
+//         }
+        // stBmp = FlutterBluetoothSerialPlugin.class.getResourceAsStream("/res/signature.bmp");
         
-        Bitmap temp = BitmapFactory.decodeStream(stBmp);
+        // Bitmap temp = BitmapFactory.decodeStream(stBmp);
         
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inMutable = true;
+        Bitmap temp = BitmapFactory.decodeByteArray(signatureByte, 0, signatureByte.length, options);
+
         PosY += IncY;
         
         float xPos = (float)PosX * 200;
@@ -560,6 +563,29 @@ RequestPermissionsResultListener {
         c.drawBitmap(temp, xPos, yPos, p);
         c.save();
     }
+
+
+    private static void PrintBarCode(Registrar registrar, double PosX, double IncY, String strBarCode)
+    {
+        Paint p = new Paint();
+
+        // AssetManager assetManager = CacheManager.context.getAssets();
+        AssetManager assetManager = registrar.context().getAssets();
+        
+        Typeface font = Typeface.createFromAsset(assetManager, "assets/fonts/Barcode39.otf");
+        p.setTypeface(font);
+        p.setColor(Color.BLACK);
+        p.setTextSize(60);
+        
+        PosY += IncY;
+        
+        float xPos = (float) PosX * 200;
+        float yPos = (float)PosY * 200;
+        
+        c.drawText("*" + strBarCode + "*", xPos, yPos, p);
+        c.save();
+    }
+
 
     private void testPrint(Result result, String message) {
         // Bitmap b = Bitmap.createBitmap(832, 100, Config.ARGB_8888);
@@ -901,39 +927,39 @@ RequestPermissionsResultListener {
     };
 }
 
-class Notice {
-    public static double CompoundAmount1 = 50.00;
-    public static double CompoundAmount2 = 80.00;
-    public static double CompoundAmount3 = 100.00;
-    public static String CompoundDate = "2019/01/11";
-    public static String CompoundExpiryDateString = "Test";
-    public static String HandheldCode = "AC7";
-    public static List<String> ImageLocation;
-    public static String ImageLocation1 = "AC745679187Pic0.jpg";
-    public static String ImageLocation2 = "AC745679187Pic1.jpg";
-    public static String ImageLocation3 = "AC745679187Pic2.jpg";
-    public static String NoticeId = "1234";
-    public static String NoticeNo = "AC745679187";
-    public static String Offence = "MENYEBABKAN/MEMBENARKAN KENDERAAN DIHENTIKAN DI JALAN DALAM KEDUDUKAN /KEADAAN YG MUNGKIN MENYEBABKAN BAHAYA/HALANGAN/KESUSAHAN KEPADA PENGGUNA/LALULINTAS";
-    public static String OffenceAct = "AKTA PENGANGKUTAN JALAN 1987";
-    public static String OffenceActCode = "04";
-    public static String OffenceDateTime = "2019/01/11";
-    public static String OffenceDate = "2019/01/11";
-    public static String OffenceTime = "14:02:10";
-    public static String OffenceLocation = "TAMAN WAWASAN";
-    public static String OffenceLocationArea = "PRESINT 2";
-    public static String OffenceLocationDetails = "IKN";
-    public static String OffenceSection = "SEKSYEN 48";
-    public static String RoadTaxNo = "42718384";
-    public static String VehicleColor = "Test";
-    public static String VehicleMake = "MERCEDES";
-    public static String VehicleMakeModel = "MERCEDES BENZ";
-    public static String VehicleNo = "RH7907";
-    public static String VehicleType = "MOTOKAR";
-    public static String Witness = "ZULFADZLI BIN ANWAR";
+// class Notice {
+//     public static double CompoundAmount1 = 50.00;
+//     public static double CompoundAmount2 = 80.00;
+//     public static double CompoundAmount3 = 100.00;
+//     public static String CompoundDate = "2019/01/11";
+//     public static String CompoundExpiryDateString = "Test";
+//     public static String HandheldCode = "AC7";
+//     public static List<String> ImageLocation;
+//     public static String ImageLocation1 = "AC745679187Pic0.jpg";
+//     public static String ImageLocation2 = "AC745679187Pic1.jpg";
+//     public static String ImageLocation3 = "AC745679187Pic2.jpg";
+//     public static String NoticeId = "1234";
+//     public static String NoticeNo = "AC745679187";
+//     public static String Offence = "MENYEBABKAN/MEMBENARKAN KENDERAAN DIHENTIKAN DI JALAN DALAM KEDUDUKAN /KEADAAN YG MUNGKIN MENYEBABKAN BAHAYA/HALANGAN/KESUSAHAN KEPADA PENGGUNA/LALULINTAS";
+//     public static String OffenceAct = "AKTA PENGANGKUTAN JALAN 1987";
+//     public static String OffenceActCode = "04";
+//     public static String OffenceDateTime = "2019/01/11";
+//     public static String OffenceDate = "2019/01/11";
+//     public static String OffenceTime = "14:02:10";
+//     public static String OffenceLocation = "TAMAN WAWASAN";
+//     public static String OffenceLocationArea = "PRESINT 2";
+//     public static String OffenceLocationDetails = "IKN";
+//     public static String OffenceSection = "SEKSYEN 48";
+//     public static String RoadTaxNo = "42718384";
+//     public static String VehicleColor = "Test";
+//     public static String VehicleMake = "MERCEDES";
+//     public static String VehicleMakeModel = "MERCEDES BENZ";
+//     public static String VehicleNo = "RH7907";
+//     public static String VehicleType = "MOTOKAR";
+//     public static String Witness = "ZULFADZLI BIN ANWAR";
 
-    public static void main(String[] args) {
-        Notice myObj = new Notice(); // Create an object of class MyClass (This will call the constructor)
-        // System.out.println(myObj.x); // Print the value of x
-    }
-}
+//     public static void main(String[] args) {
+//         Notice myObj = new Notice(); // Create an object of class MyClass (This will call the constructor)
+//         // System.out.println(myObj.x); // Print the value of x
+//     }
+// }

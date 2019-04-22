@@ -77,8 +77,8 @@ class FlutterBluetoothSerial {
   Future<dynamic> write(String message) =>
   _channel.invokeMethod('write', {'message': message});
 
-  Future<dynamic> printJob(NoticePrint notice) async =>
-  await _channel.invokeMethod('printJob', notice.toMap());
+  Future<dynamic> printJob(NoticePrint notice, Uint8List imgByte) async =>
+  await _channel.invokeMethod('printJob', {"notice":notice.toMap(), "signature":imgByte});
 
   Future<dynamic> testPrint(String message) =>
   _channel.invokeMethod('testPrint', {'message': message});
@@ -113,6 +113,7 @@ class BluetoothDevice {
 class NoticePrint {
   String noticeNo;
   String roadtax;
+  String vehicleNo;
   String vehicleMakeModel;
   String color;
   String locationDetail;
@@ -129,6 +130,7 @@ class NoticePrint {
 
   Map<String, dynamic> toMap() => {
     'notice_no': this.noticeNo,
+    'vehicle_no': this.vehicleNo,
     'roadtax': this.roadtax,
     'vehicle_make_model': this.vehicleMakeModel,
     'color': this.color,
