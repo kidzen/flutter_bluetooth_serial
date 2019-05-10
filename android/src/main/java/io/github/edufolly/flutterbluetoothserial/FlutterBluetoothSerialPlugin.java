@@ -479,11 +479,12 @@ RequestPermissionsResultListener {
         PrintText(1.1d, 0.1d, "Arial", 9, false, "WARDEN LALULINTAS", -1);
         PrintText(3.0d, 0.0d, "Arial", 9, false, "TARIKH :", -1);
         PrintText(3.5d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("date")), -1);
+        PrintText(1.0d, 1.18d, "Arial", 9, true, String.valueOf(notice.get("expired_date")), -1);
 
-        PrintText(1.85d, 1.9d, "Arial", 9, true, "RM 30", -1);
+        PrintText(1.9d, 0.8d, "Arial", 9, true, "RM 30", -1);
         // PrintText(1.92d, 1.1d, "Arial", 9, true, "RM 30", -1);
-        PrintText(2.4d, 0.0d, "Arial", 9, true, "RM 50", -1);
-        PrintText(3.10d, 0.0d, "Arial", 9, true, "RM 100", -1);
+        PrintText(2.5d, 0.0d, "Arial", 9, true, "RM 50", -1);
+        PrintText(3.2d, 0.0d, "Arial", 9, true, "RM 100", -1);
 
         // PrintText(0.1d, 0.8d, "Arial", 9, true, "NO KENDERAAN:", -1);
         // PrintTextFlow(String.valueOf(notice.get("act_std")), 0.3d, 0.15d);
@@ -496,8 +497,8 @@ RequestPermissionsResultListener {
         // PrintText(0.1d, 0.15d, "Arial", 9, false, "TARIKH", -1);
         // PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("date")), -1);
 
-        PrintImage(registrar, signatureByte, 0.1d, 1.0d, 0.0d, 0.0d, false);
-        PrintText(0.1d, 0.3d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
+        PrintImage(registrar, signatureByte, 0.1d, 0.8d, 0.0d, 0.0d, false);
+        PrintText(0.1d, 0.5d, "Arial", 9, false, "(AHMAD HILMI BIN HARUN)", -1);
 
         // PrintImage(registrar, "signature.bmp", 0.2, 0.4, 0, 0, false);
 
@@ -525,6 +526,21 @@ RequestPermissionsResultListener {
             result.error("write_error", ex.getMessage(), exceptionToString(ex));
         }
     }
+
+    // public static String addDay(String oldDate, int numberOfDays) {
+    //     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    //     Calendar c = Calendar.getInstance();
+    //     try {
+    //         c.setTime(dateFormat.parse(oldDate));
+    //     } catch (ParseException e) {
+    //         e.printStackTrace();
+    //     }
+    //     c.add(Calendar.DAY_OF_YEAR,numberOfDays);
+    //     dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    //     Date newDate = new Date(c.getTimeInMillis());
+    //     String resultDate = dateFormat.format(newDate);
+    //     return resultDate;
+    // }
 
     private static void PrintImage(Registrar registrar, byte[] signatureByte, double PosX, double IncY, double Width, double Height, boolean Aspect) {
         Paint p = new Paint();
