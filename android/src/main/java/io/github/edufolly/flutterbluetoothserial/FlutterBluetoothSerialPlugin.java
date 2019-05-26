@@ -251,7 +251,7 @@ RequestPermissionsResultListener {
         result.success(list);
     }
 
-    public static String GetDeviceSerialNo()
+    public static String getDeviceSerialNo()
     {
         String serialNumber;
 
@@ -481,10 +481,10 @@ RequestPermissionsResultListener {
         PrintText(3.5d, 0.0d, "Arial", 9, true, String.valueOf(notice.get("date")), -1);
         PrintText(1.0d, 1.18d, "Arial", 9, true, String.valueOf(notice.get("expired_date")), -1);
 
-        PrintText(1.9d, 0.8d, "Arial", 9, true, "RM 30", -1);
+        PrintText(1.9d, 0.8d, "Arial", 9, true, "RM " + String.valueOf(notice.get("rate1")), -1);
         // PrintText(1.92d, 1.1d, "Arial", 9, true, "RM 30", -1);
-        PrintText(2.5d, 0.0d, "Arial", 9, true, "RM 50", -1);
-        PrintText(3.2d, 0.0d, "Arial", 9, true, "RM 100", -1);
+        PrintText(2.5d, 0.0d, "Arial", 9, true, "RM " + String.valueOf(notice.get("rate2")), -1);
+        PrintText(3.2d, 0.0d, "Arial", 9, true, "RM " + String.valueOf(notice.get("rate3")), -1);
 
         // PrintText(0.1d, 0.8d, "Arial", 9, true, "NO KENDERAAN:", -1);
         // PrintTextFlow(String.valueOf(notice.get("act_std")), 0.3d, 0.15d);

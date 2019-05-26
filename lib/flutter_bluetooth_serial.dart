@@ -126,6 +126,9 @@ class NoticePrint {
   String actReg;
   String offence;
   String officer;
+  String rate1;
+  String rate2;
+  String rate3;
   String expiredDate;
 
   Map<String, dynamic> toMap() => {
@@ -144,6 +147,9 @@ class NoticePrint {
     'act_reg': this.actReg,
     'offence': this.offence,
     'officer': this.officer,
+    'rate1': this.rate1,
+    'rate2': this.rate2,
+    'rate3': this.rate3,
     'expired_date': this.expiredDate,
   };
 }
