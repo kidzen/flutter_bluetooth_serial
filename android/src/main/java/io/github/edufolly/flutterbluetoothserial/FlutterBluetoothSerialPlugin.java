@@ -108,7 +108,7 @@ RequestPermissionsResultListener {
             break;
             
             case "deviceSerial":
-            String serial =  GetDeviceSerialNo();
+            String serial =  getDeviceSerialNo();
             result.success(serial);
             break;
 
