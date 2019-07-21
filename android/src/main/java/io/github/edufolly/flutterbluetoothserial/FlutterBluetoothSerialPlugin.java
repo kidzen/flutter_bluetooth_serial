@@ -333,8 +333,13 @@ RequestPermissionsResultListener {
 
                 THREAD = new ConnectedThread(socket);
                 THREAD.start();
-
-                result.success(true);
+                registrar.activity().runOnUiThread(new Runnable() {
+                    @Override 
+                    public void run() {
+                        result.success(true);
+                    }
+                });
+                // result.success(true);
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage(), ex);
                 result.error("connect_error", ex.getMessage(), exceptionToString(ex));
@@ -446,14 +451,15 @@ RequestPermissionsResultListener {
         PrintText(2.3d, 0.0d, "Arial", 9, false, "NO. CUKAI JALAN", -1);
         PrintText(3.2d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("roadtax")), -1);
         PrintText(0.1d, 0.25d, "Arial", 9, false, "JENAMA / MODEL", -1);
-        PrintText(2.8d, 0.0d, "Arial", 9, false, "NO KENDERAAN", -1);
+        PrintText(2.4d, 0.0d, "Arial", 9, false, "NO KENDERAAN", -1);
         String makeModel = String.valueOf(notice.get("vehicle_make_model"));
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + makeModel, -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "WARNA", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("color")), -1);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "JENIS BADAN", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("vehicle_type")), -1);
-        PrintText(2.8d, 0.0d, "Arial", 20, false, String.valueOf(notice.get("vehicle_no")), -1);
+        PrintText(2.4d, 0.0d, "Arial", 14, false, String.valueOf(notice.get("vehicle_no")), -1);
+        // PrintTextFlow(String.valueOf(notice.get("vehicle_no")), 2.3d, 0.0d, 14, true);
         PrintText(0.1d, 0.15d, "Arial", 9, false, "LOKASI / JALAN", -1);
         PrintText(0.95d, 0.0d, "Arial", 9, true, " : " + String.valueOf(notice.get("location")), -1);
 
@@ -691,6 +697,41 @@ RequestPermissionsResultListener {
         p.setColor(Color.BLACK);
         p.setTextSize(20.25f);
         p.setTypeface(Typeface.DEFAULT_BOLD);
+        PosY += IncY;
+        float xPos = ((float) PosX) * 200.0f;
+        float yPos = ((float) PosY) * 200.0f;
+        String strTemp = "";
+        while (strVariable.length() != 0) {
+            if (p.measureText(strVariable) < 760.0f) {
+                c.drawText(strVariable, xPos, yPos, p);
+                c.save();
+                yPos += 20.0f;
+                strVariable = strTemp.trim();
+                strTemp = "";
+            }
+            if (strVariable.length() != 0) {
+                if (p.measureText(strVariable) < 760.0f) {
+                    c.drawText(strVariable, xPos, yPos, p);
+                    c.save();
+                    yPos += 20.0f;
+                    strVariable = "";
+                    strTemp = "";
+                } else {
+                    strTemp = strVariable.substring(strVariable.lastIndexOf(32)) + strTemp;
+                    strVariable = strVariable.substring(0, strVariable.lastIndexOf(32));
+                }
+            }
+        }
+    }
+
+    private static void PrintTextFlow(String strVariable, double PosX, double IncY, int FontSize, boolean RightJustified) {
+        Paint p = new Paint();
+        p.setColor(Color.BLACK);
+        p.setTextSize((float) (((double) FontSize) * 2.25d));
+        p.setTypeface(Typeface.DEFAULT_BOLD);
+        if (RightJustified) {
+            p.setTextAlign(Align.CENTER);
+        }
         PosY += IncY;
         float xPos = ((float) PosX) * 200.0f;
         float yPos = ((float) PosY) * 200.0f;
